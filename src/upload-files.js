@@ -36,7 +36,7 @@ const pinataSDK = require("@pinata/sdk");
    * Load any existing file CID mappings to avoid attempting to upload
    * a file that may have already been uploaded and the CID is known.
    */
-  const pinataCIDs = fs.readJsonSync("./output/downloaded-cids.json") ?? {};
+  const pinataCIDs = /*fs.readJsonSync("./output/downloaded-cids.json") ?? */{};
   const pinata = pinataSDK(PINATA_API_KEY, PINATA_API_SECRET);
 
   /**
@@ -48,7 +48,7 @@ const pinataSDK = require("@pinata/sdk");
    */
   const rateLimiter = new Bottleneck({
     maxConcurrent: 1,
-    minTime: 3000, // Once every 3 seconds
+    minTime: 500, // Once every half second
   });
 
   /**
