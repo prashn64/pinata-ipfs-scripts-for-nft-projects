@@ -108,3 +108,6 @@ dist
 
 # Ignore script output
 output
+
+# Ignore source images
+files/*
