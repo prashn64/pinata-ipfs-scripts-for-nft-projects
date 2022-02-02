@@ -17,7 +17,7 @@ The scripts contained in this repository were created to help automate the impor
 Clone the repository.
 
 ```bash
->_ git clone https://github.com/Coderrob/nft-pinata-bulk-upload.git
+>_ git clone https://github.com/prashn64/pinata-ipfs-scripts-for-nft-projects
 ```
 
 Change directory to the `nft-pinata-bulk-upload` folder.
