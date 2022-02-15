@@ -105,9 +105,11 @@ const pinataSDK = require("@pinata/sdk");
     await Promise.all(
       files.map(async (filePath) => {
         const fileName = getFileName(filePath);
-        cidMapping[fileName] = await rateLimiter.schedule(() =>
-          uploadFile(fileName, filePath)
-        );
+        cidMapping[fileName] = await rateLimiter.schedule(() => {
+          console.log("started uploading " + fileName);
+          uploadFile(fileName, filePath);
+          console.log("finished uploading " + fileName);
+        });
       })
     );
     fs.outputJsonSync(outputPath, cidMapping);
