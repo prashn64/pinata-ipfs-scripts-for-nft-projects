@@ -75,8 +75,10 @@ const pinataSDK = require("@pinata/sdk");
    * @return {string} returns the IPFS hash (CID) for the uploaded file
    */
   const uploadFile = async (fileName, filePath) => {
+    console.log("uploading " + fileName);
     const { exists, ipfsHash } = cidExists(fileName);
     if (exists) {
+      console.log(fileName + " already exists");
       return ipfsHash;
     }
     const { IpfsHash } = await pinata.pinFileToIPFS(
@@ -90,6 +92,7 @@ const pinataSDK = require("@pinata/sdk");
         },
       }
     );
+    console.log("upload complete for " + fileName);
     return IpfsHash;
   };
 
@@ -105,11 +108,9 @@ const pinataSDK = require("@pinata/sdk");
     await Promise.all(
       files.map(async (filePath) => {
         const fileName = getFileName(filePath);
-        cidMapping[fileName] = await rateLimiter.schedule(() => {
-          console.log("started uploading " + fileName);
-          uploadFile(fileName, filePath);
-          console.log("finished uploading " + fileName);
-        });
+        cidMapping[fileName] = await rateLimiter.schedule(() =>
+          uploadFile(fileName, filePath)
+        );
       })
     );
     fs.outputJsonSync(outputPath, cidMapping);
