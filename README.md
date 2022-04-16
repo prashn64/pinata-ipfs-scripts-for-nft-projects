@@ -53,6 +53,35 @@ PINATA_API_SECRET="fb8654309ca8777asdf7558758123456asdf817166927aknnk888877"
 
 To generate these Pinata API keys you'll need to follow the [Getting Started](https://docs.pinata.cloud/#your-api-keys) Pinata documentation
 
+### Upload images to ipfs, then use those to write metadata, then upload the metadata, and write it to the DB
+
+This assumes you have the images and json files in images-files/ and metadata-files/ directories already
+
+`node ./src/upload-files.js image-files`
+
+uploads all images to ipfs in the images folder
+
+`node ./src/write-metadata.js metadata-files image-files`
+
+writes all the ipfs image data to the metadata.  This also adds other attributes like "Zero's Grace"
+
+`node ./src/upload-files.js output/metadata-files`
+
+upload all the metadata that has been finalized from the above script's output
+
+Finally when deploying the new contract, JustSmartHumans/clientContract.py will call JustHumans/uploadCuploadCidsToDB.js which will take the ipfs hashes of the metadata that was uploaded above, and put it into our DB.  The output/metadata-files is hardcoded in this final script, so be careful if you change the above params.
+
+All the commands in succession:
+
+- `node ./src/upload-files.js image-files`
+- `node ./src/write-metadata.js metadata-files image-files`
+- `node ./src/upload-files.js output/metadata-files`
+
+relavent files from JustHumans/JustSmartHumans
+- https://github.com/prashn64/JustHumans/blob/gh-pages/scripts/uploadCidsToDB.js
+- https://github.com/prashn64/JustSmartHumans/blob/main/scripts/clientContract.py
+
+
 ### Calculate File IPFS CIDs
 
 `/src/calculate-cids.js`
@@ -83,65 +112,6 @@ node ./src/calculate-cids.js
 {
   "one.png": "QmZPnX4481toHABEtvKFoCWoVuzFFQRBiA5QR2Cij9pjon",
   "two.png": "QmazpAaWf3Bb4qhSW9PnQXfj2URbQwdNbZvDr77RbwH7xb"
-}
-```
-
-### Upload images to ipfs, then use those to write metadata, then upload the metadata, and write it to the DB
-
-This assumes you have the images and json files in images-files/ and metadata-files/ directories already
-
-`node ./src/upload-files.js image-files`
-
-uploads all images to ipfs in the images folder
-
-`node ./src/write-metadata.js metadata-files image-files`
-
-writes all the ipfs image data to the metadata.  This also adds other attributes like "Zero's Grace"
-
-`node ./src/upload-files.js output/metadata-files`
-
-upload all the metadata that has been finalized from the above script's output
-
-finally in the clientContract.py inside of JustHumans/, uploadCuploadCidsToDB.js will be called which will take the ipfs hashes of the metadata that was uploaded above,
-and put it into our DB.  The output/metadata-files is hardcoded in this final script, so be careful if you change the above params.
-
-All the commands in succession:
-
-
-`node ./src/upload-files.js image-files`
-`node ./src/write-metadata.js metadata-files image-files`
-`node ./src/upload-files.js output/metadata-files`
-
-relavent files from JustHumans/JustSmartHumans
-https://github.com/prashn64/JustHumans/blob/gh-pages/scripts/uploadCidsToDB.js
-https://github.com/prashn64/JustSmartHumans/blob/main/scripts/clientContract.py
-
-
-
-
-
-#### Settings
-
-`var: outputPath` - The relative output file path. Defaulted to `./output/file-hashes.json`.
-
-`var: folderPath` - The relative folder path containing the files to be processed. Each file will have its name and CIDsha256 hash mapped. Defaulted to the `files` folder.
-
-#### Command
-
-```bash
-node ./src/calculate-hashes.js
-```
-
-#### Output
-
-`./output/file-hashes.json`
-
-#### Contents
-
-```json
-{
-  "one.png": "f8e50b5c45e6304b41f87686db539dd52138b873a3af98cc60f623d47a133df2",
-  "two.png": "76d9c6f8dc113fff71a180195077526fce3d0279034a37f23860c1f519512e94"
 }
 ```
 
