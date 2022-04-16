@@ -111,3 +111,5 @@ output
 
 # Ignore source images
 files/*
+image-files/*
+metadata-files/*

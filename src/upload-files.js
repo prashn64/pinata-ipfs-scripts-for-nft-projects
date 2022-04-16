@@ -97,8 +97,12 @@ const pinataSDK = require("@pinata/sdk");
   };
 
   try {
-    const outputPath = "./output/uploaded-cids.json";
-    const folderPath = "files";
+    let folderPath = "files";
+    var args = process.argv.slice(2);
+    if (args.length > 0) {
+      folderPath = args[0];
+    }
+    const outputPath = `./output/${folderPath}/uploaded-cids.json`;
     const cidMapping = {};
     const { files } = await recursive.read(folderPath);
     if (files?.length <= 0) {

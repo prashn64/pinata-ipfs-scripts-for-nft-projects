@@ -35,8 +35,12 @@ const recursive = require("recursive-fs");
   });
 
   try {
-    const outputPath = "./output/file-hashes.json";
-    const folderPath = "files";
+    let folderPath = "files";
+    var args = process.argv.slice(2);
+    if (args.length > 0) {
+      folderPath = args[0];
+    }
+    const outputPath = `./output/${folderPath}/file-hashes.json`;
     const hashMapping = {};
     const { files } = await recursive.read(folderPath);
     if (files?.length <= 0) {
